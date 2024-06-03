@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.emp.mapper.EmpMapper">
+	<!-- 전체조회 -->
+	<select id="selectEmpAll" resultType="EmpVO">
+		SELECT employee_id
+        		, last_name
+        		, first_name
+        		, email
+        		, phone_number
+        		, hire_date
+        		, job_id
+        		, salary
+        		, commission_pct
+        		, manager_id
+        		, department_id
+		FROM employees
+		<!-- dynamic sql -->
+		<where>
+			<if test="departmentId > 0">
+				OR department_id = #{departmentId}
+			</if>
+			<if test="jobId != null and !jobId.equals('')">
+				OR job_id = #{jobId}
+			</if>
+		</where>
+		ORDER BY employee_id
+	</select>
+	
+	<!-- 단건조회 -->
+	<select id="selectEmpInfo" resultType="EmpVO">
+		SELECT employee_id
+        		, last_name
+        		, first_name
+        		, email
+        		, phone_number
+        		, hire_date
+        		, job_id
+        		, salary
+        		, commission_pct
+        		, manager_id
+        		, department_id
+		FROM employees
+		WHERE employee_id = #{employeeId}
+		<!--  #{} : PreparedStatement => 데이터 타입에 따른 작업
+			  ${} : Statement         => 데이터 타입 상관하지 않음 -->
+	</select>
+	
+   <!-- 등록 : selectKey 사용 -->
+<!--    <insert id="insertEmpInfo" parameterType="EmpVO">
+      <selectKey keyProperty="employeeId"
+               resultType="Integer"
+               order="BEFORE">
+         SELECT NVL(MAX(employee_id), 0) + 1
+         FROM dual
+      </selectKey>
+      INSERT INTO employees
+            (
+               employee_id
+               , last_name
+               , email
+               , job_id
+               , hire_date
+               <if test="salary > 0">
+               , salary
+               </if>
+            )
+          VALUES
+             (
+                employees_seq.NEXTVAL
+                , #{lastName}
+                , #{email}
+                , #{jobId}
+                <choose>
+                   <when test="hireDate != null">
+                      , #{hireDate}
+                   </when>
+                   <otherwise>
+                      , sysdate
+                   </otherwise>
+                </choose>
+                <if test="salary > 0">
+                , #{salary}
+                </if>
+             )
+   </insert> -->
+   
+   <!-- 등록 : sequence 사용 -->
+   <insert id="insertEmpInfo" parameterType="EmpVO">
+      <selectKey keyProperty="employeeId"
+               resultType="Integer"
+               order="AFTER">
+         SELECT employees_seq.CURRVAL
+         FROM dual
+      </selectKey>
+      INSERT INTO employees
+            (
+               employee_id
+               , last_name
+               , email
+               , job_id
+               , hire_date
+               <if test="salary > 0">
+               , salary
+               </if>
+            )
+          VALUES
+             (
+                employees_seq.NEXTVAL
+                , #{lastName}
+                , #{email}
+                , #{jobId}
+                <choose>
+                   <when test="hireDate != null">
+                      , #{hireDate}
+                   </when>
+                   <otherwise>
+                      , sysdate
+                   </otherwise>
+                </choose>
+                <if test="salary > 0">
+                , #{salary}
+                </if>
+             )
+   </insert>
+	
+	<!-- 수정 -->
+	<update id="updateEmpInfo">
+		UPDATE employees
+		SET
+			last_name = #{info.lastName}
+			,job_id = #{info.jobId}
+			<if test = "info.salary > 0">
+			,salary = #{info.salary}
+			</if>
+		WHERE employee_id = #{eId}
+	</update>
+	<!-- 삭제 -->
+	<delete id="deleteEmpInfo" parameterType="int">
+		DELETE FROM employees
+		WHERE employee_id = #{eid}
+	</delete>
+</mapper>

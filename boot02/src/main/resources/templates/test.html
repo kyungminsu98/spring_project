@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="">
+<head>
+<meta charset="UTF-8">
+<title>Thymeleaf Test</title>
+</head>
+<body>
+	<!--/* thymeleaf, 유일한 태그 */-->
+	<th:block th:each=" : ${#numbers.sequence(1,5)}">
+		<p th:text="${num}" />
+	</th:block>
+	<hr>
+	<!--/* 기본방식 => th:속성="${}" 데이터값 담을때 or th:src="@{}" 링크 연결할때 */-->
+	<!--/* text속성 => 템플릿문법, [[ ]]  */-->
+	<p> [[ ${'사원번호 : ' + empInfo.employeeId} ]]</p>
+	<p> 사원이름 : [[ ${empInfo.lastName} ]]</p>
+	<p> [[ ${empInfo.jobId} ]]</p>
+</body>
+</html>

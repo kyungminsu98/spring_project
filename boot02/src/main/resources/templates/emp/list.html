@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta
+      name="contextPath"
+      th:value="${#httpServletRequest.getContextPath()}"
+    />
+<title>전체사원조회</title>
+</head>
+<body>
+	<table>
+		<thead>
+			<tr>
+				<th>사원번호</th>
+				<th>이름</th>
+				<th>입사일자</th>
+				<th>업무</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!--/* 타임리프의 경우 조건문과 반복문이 함께 사용될 때 <th:block/> 태그를 이용해서 분리 */-->
+			<th:block th:each="emp : ${empList}">
+				<!-- th:onclick="|  |" |열고 닫아야함 문자열로 인식 -->
+				<tr th:onclick="|location.href='@{/empInfo(employeeId=${emp.employeeId})}'|">
+					<td th:text="${emp.employeeId}"/>
+					<td th:text="${emp.lastName}"/>
+					<!--/* <td>[[ ${emp.hireDate} ]]</td> */-->
+					<td th:text="${#dates.format(emp.hireDate, 'yyyy년 MM월 dd일')}"></td>
+					<td> [[ ${emp.jobId} ]]</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js">
+	const context = $('meta[name="contextPath"]').attr('value');
+		$('tbody > tr').on('click', function(event){
+			let eId = $(event.currentTarget).children().first().text();
+			let url = content + '/empInfo?employeeId=' + eId;
+			console.log(url);
+			location.href=url;
+		});
+	</script>
+</body>
+</html>
