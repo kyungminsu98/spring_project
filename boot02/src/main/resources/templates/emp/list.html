@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org"
+		xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+		layout:decorate="~{common/layouts/default_layout}"
+		layout:fragment="Content">
 <head>
 <meta charset="UTF-8">
-<meta
-      name="contextPath"
-      th:value="${#httpServletRequest.getContextPath()}"
-    />
+<meta name="contextPath"
+	th:value="${#httpServletRequest.getContextPath()}"/>
 <title>전체사원조회</title>
 </head>
 <body>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta
+      name="contextPath"
+      th:value="${#httpServletRequest.getContextPath()}"
+    />
+<title>전체사원조회</title>
+</head>
+<body>
+	<table>
+		<thead>
+			<tr>
+				<th>부서 ID</th>
+				<th>부서 이름</th>
+				<th>관리자 ID</th>
+				<th>locationId</th>
+			</tr>
+		</thead>
+		<tbody>
+		<!--/* 타임리프의 경우 조건문과 반복문이 함께 사용될 때 <th:block/> 태그를 이용해서 분리 */-->
+			<th:block th:each="dept : ${deptList}">
+				<!-- th:onclick="|  |" |열고 닫아야함 문자열로 인식 -->
+				<tr th:onclick="|location.href='@{/deptInfo(departmentId=${dept.departmentId})}'|">
+					<td th:text="${dept.departmentId}"/>
+					<td th:text="${dept.departmentName}"/>
+					<td th:text="${dept.managerId}"></td>
+					<td> [[ ${dept.locationId} ]]</td>
+				</tr>
+			</th:block>
+		</tbody>
+	</table>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js">
+	const context = $('meta[name="contextPath"]').attr('value');
+		$('tbody > tr').on('click', function(event){
+			let eId = $(event.currentTarget).children().first().text();
+			let url = content + '/deptInfo?departmentId=' + dId;
+			console.log(url);
+			location.href=url;
+		});
+	</script>
+</body>
+</html>
