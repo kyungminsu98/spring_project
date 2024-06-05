@@ -45,7 +45,9 @@ public class SpringSecurityConfig {
 			.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
 			.anyRequest().authenticated()
 			.and().formLogin()
-			.and().logout();
+				.defaultSuccessUrl("/all")
+			.and().logout()
+				.logoutSuccessUrl("/all");
 		return http.build();
 			
 	}
